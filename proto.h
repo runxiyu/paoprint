@@ -7,6 +7,8 @@
 // we declare them as string constatnts.
 
 #define LPD_RECV_PRINTER_JOB "\x02"
+#define LPD_RECV_DATA_FILE "\x03"
+
 #define LPD_CFA "cfA"		// Some random mandatory separator, see §6.2.
 #define LPD_DFA "dfA"		// Another mandatory separator, see §6.3.
 

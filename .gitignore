@@ -1,3 +1,4 @@
 *.pcapng
 /paoprint
 rfc*.txt
+*.o
