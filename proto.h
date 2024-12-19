@@ -9,8 +9,8 @@
 #define LPD_RECV_PRINTER_JOB "\x02"
 #define LPD_RECV_DATA_FILE "\x03"
 
-#define LPD_CFA "cfA"		// Some random mandatory separator, see §6.2.
-#define LPD_DFA "dfA"		// Another mandatory separator, see §6.3.
+#define LPD_CFA "cfA"		// A control file associated with the proceeding job number, see §6.2.
+#define LPD_DFA "dfA"		// A data file associated with the proceeding job number see §6.3.
 
 #define LPD_CONTROL_HOST_NAME "H"
 #define LPD_CONTROL_USER_IDENTIFICATION "P"
