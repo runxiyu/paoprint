@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	if (srcfd < 0)
 		err(EXIT_FAILURE, "open: %s", argv[1]);
 
-	char rbuf[4096];
+	char rbuf[1];
 
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 
 	// §5.2
 	sendx(sockfd, LPD_RECV_PRINTER_JOB CONFIG_QUEUE LPD_LF);
-	recvx(sockfd, rbuf, 1);
+	recv_byte(sockfd, rbuf);
 	if (rbuf[0] != LPD_SUCCESS)
 		errx(EXIT_FAILURE, "Job rejected while requesting initial queue");
 
@@ -66,13 +66,13 @@ int main(int argc, char **argv)
 	control_file_header_len = snprintf(control_file_header + control_file_header_len, CONFIG_MAX_CONTROL_FILE_HEADER_LENGTH - control_file_header_len - 1, "%lu", control_file_len);
 	control_file_header_len = strmcatx(control_file_header, LPD_SP LPD_CFA CONFIG_JOB_NUMBER CONFIG_HOSTNAME LPD_LF, CONFIG_MAX_CONTROL_FILE_HEADER_LENGTH);
 	sendc(sockfd, control_file_header, control_file_header_len, 0);
-	recvx(sockfd, rbuf, 1);
+	recv_byte(sockfd, rbuf);
 	if (rbuf[0] != LPD_SUCCESS)
 		errx(EXIT_FAILURE, "Job rejected while sending control file header");
 
 	// Actually sending §7
 	sendc(sockfd, control_file, control_file_len + 1, 0);
-	recvx(sockfd, rbuf, 1);
+	recv_byte(sockfd, rbuf);
 	if (rbuf[0] != LPD_SUCCESS)
 		errx(EXIT_FAILURE, "Job rejected while sending control file");
 
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 	recv_data_file_line_len = snprintf(recv_data_file_line + recv_data_file_line_len, CONFIG_MAX_RECV_DATA_FILE_LINE_LENGTH - recv_data_file_line_len - 1, "%lu", file_size);
 	recv_data_file_line_len = strmcatx(recv_data_file_line, LPD_SP LPD_DFA CONFIG_JOB_NUMBER CONFIG_HOSTNAME LPD_LF, CONFIG_MAX_RECV_DATA_FILE_LINE_LENGTH);
 	sendx(sockfd, recv_data_file_line);
-	recvx(sockfd, rbuf, 1);
+	recv_byte(sockfd, rbuf);
 	if (rbuf[0] != LPD_SUCCESS)
 		errx(EXIT_FAILURE, "Job rejected while sending data receive line");
 
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 		}
 	}
 	sendbx(sockfd, '\0');
-	recvx(sockfd, rbuf, 1);
+	recv_byte(sockfd, rbuf);
 	if (rbuf[0] != LPD_SUCCESS)
 		errx(EXIT_FAILURE, "Job rejected while sending actual data");
 

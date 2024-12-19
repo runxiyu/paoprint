@@ -58,15 +58,16 @@ void sendbx(int fd, char content)
 }
 
 // len must be nonzero.
-size_t recvx(int fd, char *buf, size_t len)
+unsigned char recv_byte(int fd, char *buf)
 {
-	ssize_t rlen = recv(fd, buf, len, 0);
+	ssize_t rlen = recv(fd, buf, 1, 0);
 	if (rlen < 0) {
 		err(EXIT_FAILURE, "recv");
 	} else if (rlen == 0) {
 		errx(EXIT_FAILURE, "disconnected");
+	} else if (rlen == 1) {
+		return *buf;
 	} else {
-		return rlen;
+		errx(EXIT_FAILURE, "recv'ed illegal number of bytes");
 	}
 }
-
